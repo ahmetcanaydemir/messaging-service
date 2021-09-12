@@ -11,7 +11,12 @@
 </p>
 <p align="center">An example messaging service Node.js backend with microservices architecture. Used NestJS, Redis, Docker, Swagger and Passport libraries and technologies. </p>
 
+---
+
 # Messaging Service
+<p align="center">
+  <img src="./img-architecture.svg" alt="Architecture"/>
+</p>
 
 ## Running the Project
 
@@ -39,9 +44,6 @@ If you've made a change to a service and want to redeploy it with docker compose
 just use `docker-compose up -d --no-deps --build <serviceName>` where serviceName is one of the named services from the
 docker-compose.yml file.
 
-## Microservice Architecture
-
-![Architecture](/img-architecture.svg)
 
 ## REST API
 
