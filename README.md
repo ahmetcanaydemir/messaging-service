@@ -5,6 +5,9 @@
   <a href="https://codecov.io/gh/ahmetcanaydemir/messaging-service">
     <img src="https://codecov.io/gh/ahmetcanaydemir/messaging-service/branch/main/graph/badge.svg?token=xPBc7Qvo8M"/>
   </a>
+  <a href="https://github.com/ahmetcanaydemir/messaging-service/actions/workflows/codecov.yml">
+    <img src="https://github.com/ahmetcanaydemir/messaging-service/actions/workflows/codecov.yml/badge.svg?branch=main"/>
+  </a>
 </p>
 <p align="center">An example messaging service Node.js backend with microservices architecture. Used NestJS, Redis, Docker, Swagger and Passport libraries and technologies. </p>
 
