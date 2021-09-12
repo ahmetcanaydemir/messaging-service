@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  redis:
+    image: "bitnami/redis:latest"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    labels:
+      kompose.service.type: nodeport
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redisdata:/bitnami/redis"
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+      - mongoconfig:/data/configdb
+    restart: unless-stopped
+
+volumes:
+  mongodata:
+  mongoconfig:
+  redisdata:

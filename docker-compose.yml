@@ -1,0 +1,71 @@
+version: "3.8"
+services:
+  api-gateway:
+    image: messaging/api-gateway:latest
+    build:
+      context: ./api-gateway
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    ports:
+      - "3000:3000"
+
+  auth:
+    image: messaging/auth:latest
+    build:
+      context: ./microservices/auth-service
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+
+  user:
+    image: messaging/user:latest
+    build:
+      context: ./microservices/user-service
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      - mongo
+      - redis
+
+  message:
+    image: messaging/message:latest
+    build:
+      context: ./microservices/message-service
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      - mongo
+      - redis
+
+  redis:
+    image: "bitnami/redis:latest"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    labels:
+      kompose.service.type: nodeport
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redisdata:/bitnami/redis"
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+      - mongoconfig:/data/configdb
+    restart: unless-stopped
+
+volumes:
+  mongodata:
+  mongoconfig:
+  redisdata:

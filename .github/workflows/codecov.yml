@@ -1,0 +1,59 @@
+name: Code Coverage
+
+on: [push]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js v14
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: api-gateway
+      working-directory: ./api-gateway
+      run: |
+        yarn
+        yarn test:cov
+     
+    - name: user-service
+      working-directory: ./microservices/user-service
+      run: |
+        yarn
+        yarn test:cov
+        
+    - name: message-service
+      working-directory: ./microservices/message-service
+      run: |
+        yarn
+        yarn test:cov
+        
+    - name: auth-service
+      working-directory: ./microservices/auth-service
+      run: |
+        yarn
+        yarn test:cov
+    
+    - name: Upload api-gateway to codecov
+      uses: codecov/codecov-action@v2
+      with:
+        working-directory: ./api-gateway
+    
+    - name: Upload user-service to codecov
+      uses: codecov/codecov-action@v2
+      with:
+        working-directory: ./microservices/user-service
+        
+    - name: Upload message-service to codecov
+      uses: codecov/codecov-action@v2
+      with:
+        working-directory: ./microservices/message-service
+        
+    - name: Upload auth-service to codecov
+      uses: codecov/codecov-action@v2
+      with:
+        working-directory: ./microservices/auth-service
+        
