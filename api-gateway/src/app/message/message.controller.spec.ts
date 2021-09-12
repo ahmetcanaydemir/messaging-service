@@ -8,7 +8,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { lastValueFrom, of, throwError } from 'rxjs';
 import { MessageController } from './message.controller';
 
-fdescribe('MessageController', () => {
+describe('MessageController', () => {
   let controller: MessageController;
   let userService: ClientProxy;
   let messageService: ClientProxy;

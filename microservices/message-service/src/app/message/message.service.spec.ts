@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Message } from './message.model';
 import { MessageService } from './message.service';
 
-fdescribe('MessageService', () => {
+describe('MessageService', () => {
   class mockMessageModel {
     id: string;
     receiver: string;

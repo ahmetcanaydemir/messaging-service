@@ -1,9 +1,10 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from './user.model';
+import { preSave, User } from './user.model';
 import { UserService } from './user.service';
 import { MongoError } from 'mongodb';
 import { NotFoundException } from '@nestjs/common';
+import { compareSync, hashSync } from 'bcryptjs';
 
 describe('UserService', () => {
   class mockUserModel {
@@ -96,6 +97,7 @@ describe('UserService', () => {
     it('should block user', async () => {
       let userSrc = new mockUserModel({ username: 'userSrc' }).save();
       const userDst = new mockUserModel({ username: 'userDst' }).save();
+      const userDst2 = new mockUserModel({ username: 'userDst2' }).save();
       await service.block({
         authUsername: userSrc.username,
         blockUsername: userDst.username,
@@ -103,6 +105,10 @@ describe('UserService', () => {
       await service.block({
         authUsername: userSrc.username,
         blockUsername: userDst.username,
+      });
+      await service.block({
+        authUsername: userDst2.username,
+        blockUsername: userSrc.username,
       });
       userSrc = mockUserModel.findOne({ username: 'userSrc' });
       const blockedUserCount = userSrc.blocks.filter(
@@ -128,11 +134,16 @@ describe('UserService', () => {
         authUsername: 'userSrc',
         blockUsername: 'userDst',
       });
+      const reverseBlockedUserResult = await service.checkBlocked({
+        authUsername: 'userSrc',
+        blockUsername: 'userDst2',
+      });
       const notBlockedUserResult = await service.checkBlocked({
         authUsername: 'userSrc',
         blockUsername: 'test',
       });
       expect(blockedUserResult).toBe(true);
+      expect(reverseBlockedUserResult).toBe(true);
       expect(notBlockedUserResult).toBe(false);
     });
 
@@ -145,5 +156,29 @@ describe('UserService', () => {
           }),
       ).rejects.toThrowError(NotFoundException);
     });
+  });
+});
+
+describe('UserModel', () => {
+  it('should hash password if password edited', () => {
+    const nextMockFn = jest.fn();
+    const mockModel = {
+      password: '123',
+      isModified: () => true,
+    };
+
+    preSave.call(mockModel, nextMockFn);
+    expect(compareSync('123', mockModel.password)).toBe(true);
+  });
+
+  it('should return without change password if password not edited', () => {
+    const nextMockFn = jest.fn();
+    const mockModel = {
+      password: 'hashedPass12312',
+      isModified: () => false,
+    };
+
+    preSave.call(mockModel, nextMockFn);
+    expect(mockModel.password).toStrictEqual(mockModel.password);
   });
 });

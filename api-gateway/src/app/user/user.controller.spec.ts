@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-fdescribe('UserController', () => {
+describe('UserController', () => {
   let controller: UserController;
   let userService: ClientProxy;
   beforeEach(async () => {

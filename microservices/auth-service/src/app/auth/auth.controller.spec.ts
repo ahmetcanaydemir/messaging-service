@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-fdescribe('AuthController', () => {
+describe('AuthController', () => {
   let controller: AuthController;
   let service: AuthService;
 
